@@ -92,37 +92,39 @@ fix('politics','za5','【完整答案模式·安徽本土题】\n(1)安徽经济
 fix('politics','za6','【完整答案模式】\n(1)海南自贸港封关运作传递的信号：\n①改革开放是决定当代中国命运的关键一招。中国开放的大门不会关闭，只会越开越大。\n②坚持对外开放基本国策，积极融入经济全球化。\n③愿意与世界各国共享发展机遇，推动建设开放型世界经济。\n④体现了推动构建人类命运共同体的实际行动。\n(2)中国在全球治理中的大国担当：\n①世界和平的建设者——斡旋国际争端推动政治解决。\n②全球发展的贡献者——一带一路为沿线国家带来投资和就业。\n③国际秩序的维护者——坚持对话协商遵循联合国宪章。\n④中国为全球治理贡献中国智慧和中国方案。\n⑤中国始终是世界和平与发展的重要力量展现负责任大国形象。\n(3)感想：\n①为祖国强大感到自豪和骄傲。\n②增强做中国人的志气、骨气、底气。\n③努力学习将来为祖国发展贡献力量。\n④培养国际视野关注人类共同命运。\n【评分】(1)4分+(2)6分+(3)4分=14分。');
 
 // ━━━ 清理过于简单的题目 ━━━
-// 删除难度为easy且属于基础知识点的水题（保留有代表性的）
+// 中考前一个月复习：砍掉太基础的、保留有考试价值的
 function cleanEasy(subj){
   var qs=SUBJECTS[subj].questions;
   var toRemove=[];
   qs.forEach(function(q,i){
-    // 删除太简单且无来源标注的题（大概率是生成的水题）
-    if(q.difficulty==='easy' && !q.source) toRemove.push(i);
-    // 删除明显的水题模式
-    if(q.text && q.text.indexOf('____')>0 && !q.source && q.difficulty==='easy'){
-      // 保留那些有意义的填空题（如公式、概念填空）
-      var keepPatterns=['力的三要素','重力的方向','加速','安全电压','常见电压','化学变化','催化剂','原子结构','空气成分','碳单质','合金','净化','合成材料','实验','精神','发展','宪法','根本','法律','基本国策','国家性质','学习观'];
-      var keep=false;
-      for(var k=0;k<keepPatterns.length;k++){
-        if(q.text.indexOf(keepPatterns[k])>=0){keep=true;break;}
-      }
-      if(!keep) toRemove.push(i);
+    var txt=q.text||'';
+    var exp=q.explanation||'';
+    // 1. 无来源标记的easy题 → 水题
+    if(q.difficulty==='easy' && (!q.source||q.source.indexOf('生成')>=0||q.source.indexOf('精练')>=0)){
+      // 但有完整解释的保留
+      if(exp.length<30) toRemove.push(i);
     }
+    // 2. 过于基础的计算（小学水平）
+    if(txt.indexOf('|-')>=0 && txt.indexOf('=____')>=0 && q.type==='fill') toRemove.push(i);
+    if(txt.indexOf('的绝对值')>=0 && !/中考/.test(q.source||'')) toRemove.push(i);
+    if(txt.indexOf('的相反数')>=0 && !/中考/.test(q.source||'')) toRemove.push(i);
+    // 3. 无意义的数字游戏
+    if(txt.indexOf('下列计算正确的是')>=0 && exp.length<50) toRemove.push(i);
+    // 4. 过于简单且无解析
+    if(q.difficulty==='easy'&&exp.length<25&&q.type==='fill') toRemove.push(i);
   });
-  // 从后往前删
-  toRemove.sort(function(a,b){return b-a;});
+  // 从后往前删，去重
+  toRemove=[...new Set(toRemove)].sort(function(a,b){return b-a;});
   var removed=0;
   toRemove.forEach(function(i){
-    if(qs[i] && qs[i].difficulty==='easy'){
+    if(qs[i]){
       qs.splice(i,1);
       removed++;
     }
   });
-  console.log(subj+': removed '+removed+' easy questions, remaining '+qs.length);
+  console.log(subj+': removed '+removed+' easy, remaining '+qs.length);
 }
 
-// 只保留有价值的题目，删明显水题
 cleanEasy('math');
 cleanEasy('physics');
 cleanEasy('chemistry');
