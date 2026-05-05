@@ -1,0 +1,62 @@
+<!-- 庐江中考特训营 · 首页 -->
+<view class="header">
+  <text class="logo">⚔️ 庐江中考特训营</text>
+  <view class="xp-row">
+    <text class="level-tag">{{level.name}}</text>
+    <view class="xp-bar-wrap"><view class="xp-fill" style="width:{{xpPercent}}%"></view></view>
+    <text class="xp-text">{{level.xp}}/{{level.nextXp}}</text>
+  </view>
+</view>
+
+<!-- 科目标签 -->
+<view class="tabs">
+  <view
+    wx:for="{{subjects}}"
+    wx:key="id"
+    class="tab tab-{{item.id}} {{currentSubj === item.id ? 'active' : ''}}"
+    data-subj="{{item.id}}"
+    bindtap="onSwitchSubj"
+  >{{item.icon}} {{item.name}}</view>
+</view>
+
+<!-- 统计 -->
+<view class="stats">
+  <text class="stat-item">📚 {{stats.total}}题</text>
+  <text class="stat-item">✅ {{stats.correct}}对</text>
+  <text class="stat-item">📊 {{stats.rate}}</text>
+  <text class="stat-item">⭐ {{stats.marked}}藏</text>
+  <text class="stat-item">🔥 {{stats.streak}}天</text>
+</view>
+
+<!-- 知识点 -->
+<scroll-view class="kp-scroll" scroll-x>
+  <text class="kp-tag {{currentKp === 'all' ? 'active' : ''}}" data-kp="all" bindtap="onSelectKp">📦 全部</text>
+  <text
+    wx:for="{{kps}}"
+    wx:key="id"
+    class="kp-tag {{currentKp === item.id ? 'active' : ''}}"
+    data-kp="{{item.id}}"
+    bindtap="onSelectKp"
+  >{{item.icon}} {{item.name}}({{item.count}})</text>
+</scroll-view>
+
+<!-- 开始按钮 -->
+<view style="padding:40rpx 24rpx;text-align:center;">
+  <button
+    style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-radius:48rpx;padding:24rpx 80rpx;font-size:32rpx;font-weight:700;border:none;box-shadow:0 8rpx 30rpx rgba(99,102,241,0.4);"
+    bindtap="onStartQuiz"
+  >🚀 开始刷题！</button>
+</view>
+
+<!-- 最近题目预览 -->
+<view wx:if="{{stats.total > 0}}" style="padding:0 24rpx;">
+  <view style="font-weight:700;font-size:30rpx;margin-bottom:16rpx;color:#374151;">📝 题目列表</view>
+  <view class="q-card" wx:for="{{previewQs}}" wx:key="id" style="margin:12rpx 0;">
+    <view class="q-header">
+      <view class="q-num">{{index + 1}}</view>
+      <text class="q-tag {{item.type === 'choice' ? 'choice' : item.type === 'fill' ? 'fill' : 'solution'}}">{{item.type === 'choice' ? '选择' : item.type === 'fill' ? '填空' : '解答'}}</text>
+      <text class="q-tag" style="font-size:22rpx;color:#9ca3af;">{{item.kp}}</text>
+    </view>
+    <view class="q-text">{{item.text}}</view>
+  </view>
+</view>

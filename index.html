@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>庐江中考冲刺 · 真题特训营</title>
+<style>
+:root {
+  --bg: #f0f4ff;
+  --card: #ffffff;
+  --text: #2c3e50;
+  --sub: #7f8c9b;
+  --border: #e8ecf4;
+  --math: #ff6b6b;
+  --physics: #4ecdc4;
+  --chemistry: #a78bfa;
+  --politics: #f59e0b;
+  --correct: #10b981;
+  --wrong: #ef4444;
+  --xp: #f59e0b;
+  --level: #8b5cf6;
+  --accent: #6366f1;
+  --radius: 16px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f0e6ff 30%, #e6f0ff 60%, #fef3e0 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ─── Header ─── */
+.header {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.logo {
+  font-size: 1.25em;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.logo-emoji { font-size: 1.4em; -webkit-text-fill-color: initial; }
+
+/* XP Bar */
+.xp-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+.xp-level {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+.xp-bar {
+  width: 120px;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+/* Subject Tabs */
+.subj-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.6);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.subj-tab {
+  padding: 10px 20px;
+  border-radius: 24px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 600;
+  transition: all 0.25s;
+  white-space: nowrap;
+  background: #fff;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.subj-tab:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.subj-tab.active { color: #fff; transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.subj-tab[data-subj="math"] { border-color: var(--math); }
+.subj-tab[data-subj="math"].active { background: linear-gradient(135deg, #ff6b6b, #ee5a24); border-color: transparent; }
+.subj-tab[data-subj="physics"] { border-color: var(--physics); }
+.subj-tab[data-subj="physics"].active { background: linear-gradient(135deg, #4ecdc4, #2ecc71); border-color: transparent; }
+.subj-tab[data-subj="chemistry"] { border-color: var(--chemistry); }
+.subj-tab[data-subj="chemistry"].active { background: linear-gradient(135deg, #a78bfa, #7c3aed); border-color: transparent; }
+.subj-tab[data-subj="politics"] { border-color: var(--politics); }
+.subj-tab[data-subj="politics"].active { background: linear-gradient(135deg, #f59e0b, #fbbf24); border-color: transparent; }
+
+/* Stats */
+.stats-strip {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 0.85em;
+  color: var(--sub);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.stat-badge {
+  background: rgba(255,255,255,0.8);
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.stat-val { font-weight: 700; color: var(--text); }
+
+/* Layout */
+.main-wrap {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: calc(100vh - 180px);
+}
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  padding: 16px;
+  position: sticky;
+  top: 130px;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+.content {
+  flex: 1;
+  padding: 16px 16px 16px 0;
+  min-width: 0;
+}
+.menu-fab {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 1.3em;
+  cursor: pointer;
+  z-index: 99;
+  box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+}
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 90;
+}
+
+/* Kp List */
+.kp-title {
+  font-weight: 700;
+  font-size: 0.95em;
+  margin-bottom: 10px;
+  color: var(--accent);
+}
+.search-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 24px;
+  border: 2px solid var(--border);
+  background: #fff;
+  font-size: 0.85em;
+  margin-bottom: 14px;
+  transition: border-color 0.2s;
+}
+.search-input:focus { outline: none; border-color: var(--accent); }
+.kp-list { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.kp-item {
+  padding: 9px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.82em;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--sub);
+  font-weight: 500;
+}
+.kp-item:hover { background: #f0f4ff; color: var(--text); }
+.kp-item.active { background: #eef2ff; color: var(--accent); font-weight: 700; }
+.kp-num { margin-left: auto; font-size: 0.78em; background: #f1f5f9; padding: 2px 8px; border-radius: 10px; }
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.ctrl-btn {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.82em;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.ctrl-btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+.ctrl-btn.accent { background: #6366f1; color: #fff; border-color: #6366f1; }
+.ctrl-btn.accent:hover { background: #5558e6; }
+.ctrl-select {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 2px solid var(--border);
+  background: #fff;
+  font-size: 0.82em;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Question Card */
+.q-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s;
+  border-left: 4px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.q-card.done-correct { border-left-color: var(--correct); background: #f0fdf6; }
+.q-card.done-wrong { border-left-color: var(--wrong); background: #fef5f5; }
+.q-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.q-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78em;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.q-tag {
+  font-size: 0.72em;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.q-tag.choice { background: #dbeafe; color: #2563eb; }
+.q-tag.fill { background: #fef3c7; color: #d97706; }
+.q-tag.solution { background: #ede9fe; color: #7c3aed; }
+.q-diff { font-size: 0.72em; }
+.q-diff.easy { color: #10b981; }
+.q-diff.medium { color: #f59e0b; }
+.q-diff.hard { color: #ef4444; }
+.q-kp { font-size: 0.75em; color: var(--sub); margin-left: auto; }
+.q-star {
+  background: none; border: none; font-size: 1.1em; cursor: pointer;
+  padding: 2px 4px; border-radius: 8px; transition: all 0.2s;
+}
+.q-star:hover { transform: scale(1.2); }
+.q-star.marked { animation: starPop 0.3s ease; }
+
+.q-text {
+  font-size: 0.95em;
+  line-height: 1.8;
+  margin-bottom: 10px;
+  color: #334155;
+}
+
+/* Interactive Options */
+.q-opts { margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px; }
+.q-opt {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9em;
+  background: #fafbfc;
+}
+.q-opt:hover { border-color: #6366f1; background: #eef2ff; }
+.q-opt.selected { border-color: #6366f1; background: #eef2ff; }
+.q-opt.correct { border-color: #10b981 !important; background: #d1fae5 !important; color: #065f46 !important; font-weight: 600; }
+.q-opt.wrong { border-color: #ef4444 !important; background: #fee2e2 !important; color: #991b1b !important; }
+.q-opt.disabled { pointer-events: none; }
+.q-opt-letter {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85em;
+  flex-shrink: 0;
+}
+.q-opt.correct .q-opt-letter { background: #10b981; color: #fff; }
+.q-opt.wrong .q-opt-letter { background: #ef4444; color: #fff; }
+
+/* Fill-in input */
+.q-fill-wrap { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.q-fill-input {
+  flex: 1; min-width: 120px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  font-size: 0.95em;
+  background: #fafbfc;
+  transition: border-color 0.2s;
+}
+.q-fill-input:focus { outline: none; border-color: #6366f1; }
+.q-fill-input.correct { border-color: #10b981 !important; background: #d1fae5 !important; }
+.q-fill-input.wrong { border-color: #ef4444 !important; background: #fee2e2 !important; }
+.q-fill-submit {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  background: #6366f1;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: all 0.2s;
+}
+.q-fill-submit:hover { background: #5558e6; }
+.q-fill-submit:disabled { background: #c7d2fe; cursor: not-allowed; }
+
+/* Answer reveal */
+.q-answer-box { margin-top: 8px; }
+.q-reveal-btn {
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: 1.5px solid #d1d5db;
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 0.78em;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.q-reveal-btn:hover { border-color: #6366f1; color: #6366f1; }
+.q-answer-content {
+  display: none;
+  margin-top: 8px;
+  padding: 12px 16px;
+  background: #f0fdf6;
+  border-radius: 12px;
+  border-left: 4px solid #10b981;
+  font-size: 0.88em;
+  line-height: 1.7;
+}
+.q-answer-content.show { display: block; }
+.q-ans-label { color: #059669; font-weight: 700; margin-bottom: 4px; }
+.q-src { font-size: 0.78em; color: #9ca3af; margin-top: 6px; }
+
+/* Feedback Toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 0.9em;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  animation: toastIn 0.4s ease, toastOut 0.3s 1.5s ease forwards;
+  pointer-events: none;
+}
+.toast.correct { background: #10b981; color: #fff; }
+.toast.wrong { background: #ef4444; color: #fff; }
+.toast.levelup { background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #fff; }
+
+@keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+@keyframes toastOut { from { opacity:1; } to { opacity:0; } }
+@keyframes starPop { 0% { transform:scale(1); } 50% { transform:scale(1.4); } 100% { transform:scale(1); } }
+
+/* Confetti */
+.confetti-piece {
+  position: fixed;
+  z-index: 199;
+  pointer-events: none;
+  animation: confettiFall 1.5s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { opacity:1; transform:translateY(0) rotate(0deg) scale(1); }
+  100% { opacity:0; transform:translateY(100vh) rotate(720deg) scale(0.3); }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .menu-fab { display: flex; align-items: center; justify-content: center; }
+  .sidebar {
+    position: fixed; left: -280px; top: 0; height: 100vh; z-index: 95;
+    background: #fff; width: 270px; padding-top: 50px;
+    transition: left 0.3s; box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+    max-height: 100vh;
+  }
+  .sidebar.open { left: 0; }
+  .sidebar-overlay.show { display: block; }
+  .content { padding: 10px; }
+  .header-inner { padding: 4px 0; }
+  .subj-tabs { padding: 8px 10px; gap: 5px; }
+  .subj-tab { padding: 8px 14px; font-size: 0.8em; }
+  .q-card { padding: 14px; }
+  .xp-bar { width: 80px; }
+  .stats-strip { gap: 8px; font-size: 0.78em; }
+}
+
+/* Empty */
+.empty-wrap { text-align: center; padding: 60px 20px; }
+.empty-wrap h2 { font-size: 1.3em; margin-bottom: 6px; }
+.empty-wrap p { color: var(--sub); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo"><span class="logo-emoji">⚔️</span>庐江中考特训营</div>
+    <div class="xp-bar-wrap">
+      <span>🔥</span>
+      <span class="xp-level" id="levelBadge">练习生</span>
+      <div class="xp-bar"><div class="xp-fill" id="xpBar" style="width:0%"></div></div>
+      <span style="font-size:0.75em;color:var(--sub)" id="xpText">0/100</span>
+    </div>
+  </div>
+</header>
+
+<nav class="subj-tabs" id="subjTabs">
+  <button class="subj-tab active" data-subj="math">📐 数学</button>
+  <button class="subj-tab" data-subj="physics">⚡ 物理</button>
+  <button class="subj-tab" data-subj="chemistry">🧪 化学</button>
+  <button class="subj-tab" data-subj="politics">📋 道法</button>
+</nav>
+
+<div class="stats-strip">
+  <div class="stat-badge">📚 总题：<span class="stat-val" id="sTotal">0</span></div>
+  <div class="stat-badge">✅ 正确：<span class="stat-val" id="sCorrect">0</span></div>
+  <div class="stat-badge">📊 正确率：<span class="stat-val" id="sRate">-</span></div>
+  <div class="stat-badge">⭐ 收藏：<span class="stat-val" id="sMarked">0</span></div>
+  <div class="stat-badge">🔥 连击：<span class="stat-val" id="sStreak">0</span>天</div>
+</div>
+
+<div class="main-wrap">
+  <button class="menu-fab" id="menuFab">📚</button>
+  <div class="sidebar-overlay" id="sbOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <input class="search-input" id="searchInp" placeholder="🔍 搜知识点/题目...">
+    <div class="kp-title" id="kpTitle">📚 知识点</div>
+    <ul class="kp-list" id="kpList"></ul>
+  </aside>
+  <main class="content">
+    <div class="controls" id="ctrls">
+      <select class="ctrl-select" id="filterKp"><option value="all">全部知识点</option></select>
+      <select class="ctrl-select" id="filterType">
+        <option value="all">全部题型</option>
+        <option value="choice">选择题</option>
+        <option value="fill">填空题</option>
+        <option value="solution">解答题</option>
+      </select>
+      <button class="ctrl-btn accent" id="btnRandom">🎲 随机挑战</button>
+      <button class="ctrl-btn" id="btnRevealAll">📖 展开解析</button>
+      <button class="ctrl-btn" id="btnReset">🔄 重来</button>
+    </div>
+    <div id="qArea"></div>
+  </main>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/data-2023.js"></script>
+<script src="js/data-extra.js"></script>
+<script src="js/data-predict.js"></script>
+<script src="js/data-pivot.js"></script>
+<script src="js/data-elite-1.js"></script>
+<script src="js/data-elite-2.js"></script>
+<script src="js/data-elite-3.js"></script>
+<script src="js/data-elite-4.js"></script>
+<script src="js/data-elite-5.js"></script>
+<script src="js/data-elite-6.js"></script>
+<script src="js/data-elite-7.js"></script>
+<script src="js/data-elite-8.js"></script>
+<script>
+// ── State ──
+const S = {
+  subj: 'math', kp: 'all', type: 'all', search: '',
+  answers: JSON.parse(localStorage.getItem('zk2_ans')||'{}'),
+  marked: JSON.parse(localStorage.getItem('zk2_star')||'[]'),
+  streak: JSON.parse(localStorage.getItem('zk2_str')||'{"d":"","n":0}'),
+  xp: JSON.parse(localStorage.getItem('zk2_xp')||'0'),
+  sessionCorrect: 0, sessionTotal: 0
+};
+const LEVELS = [
+  { name:'练习生', xp:0 }, { name:'小秀才', xp:100 }, { name:'举人', xp:300 },
+  { name:'进士', xp:600 }, { name:'状元', xp:1000 }, { name:'学神', xp:2000 }
+];
+
+function getLevel(xp) {
+  for (let i=LEVELS.length-1; i>=0; i--) if (xp >= LEVELS[i].xp) {
+    const nxt = LEVELS[i+1];
+    return { ...LEVELS[i], nextXp: nxt ? nxt.xp : LEVELS[i].xp, nextName: nxt ? nxt.name : LEVELS[i].name };
+  }
+  return { ...LEVELS[0], nextXp: LEVELS[1].xp, nextName: LEVELS[1].name };
+}
+
+function save() {
+  localStorage.setItem('zk2_ans', JSON.stringify(S.answers));
+  localStorage.setItem('zk2_star', JSON.stringify(S.marked));
+  localStorage.setItem('zk2_str', JSON.stringify(S.streak));
+  localStorage.setItem('zk2_xp', JSON.stringify(S.xp));
+}
+
+function updateStreak() {
+  const today = new Date().toISOString().slice(0,10);
+  if (S.streak.d === today) return;
+  const yday = new Date(Date.now()-864e5).toISOString().slice(0,10);
+  S.streak.d = today;
+  S.streak.n = S.streak.d === yday ? S.streak.n + 1 : 1;
+  save();
+}
+
+function addXP(n) {
+  const oldLvl = getLevel(S.xp).name;
+  S.xp += n; save();
+  const newLvl = getLevel(S.xp);
+  if (newLvl.name !== oldLvl) {
+    spawnConfetti();
+    toast('🎉 升级了！' + newLvl.name + '！', 'levelup');
+  }
+  updateXPBar();
+}
+
+function updateXPBar() {
+  const lvl = getLevel(S.xp);
+  document.getElementById('levelBadge').textContent = lvl.name;
+  const pct = lvl.nextXp > lvl.xp ? ((S.xp - lvl.xp) / (lvl.nextXp - lvl.xp) * 100) : 100;
+  document.getElementById('xpBar').style.width = Math.min(pct, 100) + '%';
+  document.getElementById('xpText').textContent = S.xp + '/' + lvl.nextXp;
+}
+
+function spawnConfetti() {
+  const colors = ['#ff6b6b','#feca57','#48dbfb','#ff9ff3','#54a0ff','#5f27cd','#01a3a4','#f368e0'];
+  for (let i=0; i<40; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    Object.assign(el.style, {
+      left: Math.random()*100 + '%', top: -(Math.random()*80+10) + 'px',
+      width: (Math.random()*10+5) + 'px', height: (Math.random()*10+5) + 'px',
+      background: colors[Math.floor(Math.random()*colors.length)],
+      borderRadius: Math.random()>0.5?'50%':'2px',
+      animationDelay: Math.random()*0.5 + 's'
+    });
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }
+}
+
+function toast(msg, type) {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2000);
+}
+
+// ── DOM ──
+const $ = id => document.getElementById(id);
+const qArea = $('qArea'), kpList = $('kpList'), kpTitle = $('kpTitle');
+
+function getQs() {
+  const subj = SUBJECTS[S.subj];
+  if (!subj) return [];
+  let qs = subj.questions;
+  if (S.kp !== 'all') qs = qs.filter(q => q.kp === S.kp);
+  if (S.type !== 'all') qs = qs.filter(q => q.type === S.type);
+  if (S.search) {
+    const w = S.search.toLowerCase();
+    qs = qs.filter(q => q.text.toLowerCase().includes(w) || q.kp.toLowerCase().includes(w) || (q.options||[]).some(o=>o.toLowerCase().includes(w)));
+  }
+  return qs;
+}
+
+function renderKP() {
+  const subj = SUBJECTS[S.subj];
+  if (!subj) return;
+  kpTitle.textContent = '📚 ' + subj.name + ' · 知识点';
+  const kps = subj.knowledgePoints || [];
+  kpList.innerHTML = `<li class="kp-item${S.kp==='all'?' active':''}" data-kp="all"><span>📦</span>全部<span class="kp-num">${subj.questions.length}</span></li>` +
+    kps.map(k => {
+      const n = subj.questions.filter(q=>q.kp===k.id).length;
+      return `<li class="kp-item${S.kp===k.id?' active':''}" data-kp="${k.id}"><span>${k.icon||'📌'}</span>${k.name}<span class="kp-num">${n}</span></li>`;
+    }).join('');
+  $('filterKp').innerHTML = '<option value="all">全部知识点</option>' + kps.map(k => `<option value="${k.id}"${S.kp===k.id?' selected':''}>${k.name}</option>`).join('');
+}
+
+function render() {
+  const qs = getQs();
+  const subjQs = SUBJECTS[S.subj]?.questions || [];
+  const done = qs.filter(q => S.answers[q.id]).length;
+  const correct = qs.filter(q => S.answers[q.id]?.ok).length;
+
+  $('sTotal').textContent = qs.length;
+  $('sCorrect').textContent = correct;
+  $('sRate').textContent = done > 0 ? Math.round(correct/done*100) + '%' : '-';
+  $('sMarked').textContent = S.marked.length;
+  $('sStreak').textContent = S.streak.n;
+  updateXPBar();
+
+  if (!qs.length) {
+    qArea.innerHTML = '<div class="empty-wrap"><h2>🔍 没找到题目</h2><p>换个知识点或清空搜索试试</p></div>';
+    return;
+  }
+
+  qArea.innerHTML = qs.map((q, i) => {
+    const ans = S.answers[q.id];
+    const starred = S.marked.includes(q.id);
+    const tnames = { choice:'选择题', fill:'填空题', solution:'解答题' };
+    const dnames = { easy:'⭐ 基础', medium:'⭐⭐ 中等', hard:'⭐⭐⭐ 硬核' };
+    let cardClass = '';
+    if (ans) cardClass = ans.ok ? ' done-correct' : ' done-wrong';
+
+    let body = '';
+    if (q.type === 'choice') {
+      body = `<div class="q-opts" data-qid="${q.id}">${(q.options||[]).map((o,j) =>
+        `<div class="q-opt${ans&&'ABCD'[j]===ans.picked?' selected'+(ans.ok?' correct':' wrong'):''}${ans?' disabled':''}" data-oidx="${j}">
+          <span class="q-opt-letter">${'ABCD'[j]}</span><span>${o}</span>
+        </div>`).join('')}</div>`;
+    } else if (q.type === 'fill') {
+      const disabled = !!ans;
+      body = `<div class="q-fill-wrap" data-qid="${q.id}">
+        <input class="q-fill-input${ans?(ans.ok?' correct':' wrong'):''}" placeholder="输入你的答案..." ${disabled?'disabled':''} value="${ans?.picked||''}">
+        ${!ans ? '<button class="q-fill-submit">✓ 提交</button>' : ''}
+      </div>`;
+    }
+
+    return `<div class="q-card${cardClass}" id="qc-${q.id}">
+      <div class="q-header">
+        <span class="q-num">${i+1}</span>
+        <span class="q-tag ${q.type}">${tnames[q.type]}</span>
+        <span class="q-diff ${q.difficulty}">${dnames[q.difficulty]}</span>
+        <span class="q-kp">${q.kp}</span>
+        ${ans ? `<span style="font-size:0.8em">${ans.ok?'✅':'❌'}</span>` : ''}
+        <button class="q-star${starred?' marked':''}" data-qid="${q.id}" onclick="toggleStar('${q.id}')">${starred?'⭐':'☆'}</button>
+      </div>
+      <div class="q-text">${q.text.replace(/\n/g,'<br>')}</div>
+      ${body}
+      ${q.type==='solution' && !ans ? '' : `
+      <div class="q-answer-box">
+        <button class="q-reveal-btn" onclick="this.nextElementSibling.classList.toggle('show');this.textContent=this.nextElementSibling.classList.contains('show')?'🙈 收起':'💡 查看解析'">💡 查看解析</button>
+        <div class="q-answer-content${ans?' show':''}">
+          <div class="q-ans-label">✅ 答案：${q.answer}</div>
+          <div>${q.explanation||''}</div>
+          ${q.source?`<div class="q-src">📎 ${q.source}</div>`:''}
+          ${ans ? '' : '<div style="margin-top:8px;display:flex;gap:8px;"><button class="ctrl-btn" style="font-size:0.75em;padding:4px 14px;" onclick="record(\''+q.id+'\',true,this)">✅ 我答对了</button><button class="ctrl-btn" style="font-size:0.75em;padding:4px 14px;" onclick="record(\''+q.id+'\',false,this)">❌ 答错了</button></div>'}
+        </div>
+      </div>`}
+    </div>`;
+  }).join('');
+
+  // Bind MC clicks
+  qArea.querySelectorAll('.q-opt:not(.disabled)').forEach(opt => {
+    opt.addEventListener('click', function() {
+      const qid = this.parentElement.dataset.qid;
+      const oidx = parseInt(this.dataset.oidx);
+      const q = qs.find(qq => qq.id === qid);
+      if (!q) return;
+      const picked = 'ABCD'[oidx];
+      const ok = picked === q.answer;
+      // Disable all
+      this.parentElement.querySelectorAll('.q-opt').forEach(o => o.classList.add('disabled'));
+      // Highlight correct
+      this.parentElement.querySelectorAll('.q-opt').forEach(o => {
+        if (o.dataset.oidx == (q.answer.charCodeAt(0) - 65)) o.classList.add('correct');
+      });
+      if (!ok) this.classList.add('wrong');
+      record(qid, ok, picked);
+      const card = document.getElementById('qc-'+qid);
+      if (card) { card.classList.remove('done-correct','done-wrong'); card.classList.add(ok?'done-correct':'done-wrong'); }
+    });
+  });
+
+  // Bind fill submits
+  qArea.querySelectorAll('.q-fill-submit').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const wrap = this.parentElement;
+      const qid = wrap.dataset.qid;
+      const inp = wrap.querySelector('.q-fill-input');
+      const q = qs.find(qq => qq.id === qid);
+      if (!q || !inp) return;
+      const val = inp.value.trim();
+      if (!val) return;
+      const correctVals = String(q.answer).split('；').map(v=>v.trim().toLowerCase());
+      const ok = correctVals.some(cv => val.toLowerCase().includes(cv) || cv.includes(val.toLowerCase()));
+      inp.classList.add(ok?'correct':'wrong');
+      this.remove();
+      record(qid, ok, val);
+      const card = document.getElementById('qc-'+qid);
+      if (card) { card.classList.remove('done-correct','done-wrong'); card.classList.add(ok?'done-correct':'done-wrong'); }
+    });
+  });
+}
+
+function record(qid, ok, picked) {
+  if (S.answers[qid]) return;
+  updateStreak();
+  S.answers[qid] = { ok, time: Date.now(), picked: picked || '' };
+  S.sessionCorrect += ok ? 1 : 0;
+  S.sessionTotal++;
+  addXP(ok ? 10 : 2);
+  save();
+  if (ok) toast('✅ 正确！+10 XP', 'correct');
+  else toast('❌ 再想想～ +2 XP', 'wrong');
+  // Auto-reveal answer
+  const card = document.getElementById('qc-'+qid);
+  if (card) {
+    const ansContent = card.querySelector('.q-answer-content');
+    if (ansContent) ansContent.classList.add('show');
+    const revealBtn = card.querySelector('.q-reveal-btn');
+    if (revealBtn) revealBtn.textContent = '🙈 收起';
+  }
+  // Update stats
+  const qs = getQs();
+  const done = qs.filter(q => S.answers[q.id]).length;
+  const correct = qs.filter(q => S.answers[q.id]?.ok).length;
+  $('sCorrect').textContent = correct;
+  $('sRate').textContent = done > 0 ? Math.round(correct/done*100) + '%' : '-';
+}
+
+function toggleStar(qid) {
+  const i = S.marked.indexOf(qid);
+  if (i>=0) S.marked.splice(i,1); else S.marked.push(qid);
+  save(); render();
+}
+
+// ── Events ──
+$('subjTabs').addEventListener('click', e => {
+  const t = e.target.closest('.subj-tab');
+  if (!t) return;
+  document.querySelectorAll('.subj-tab').forEach(b=>b.classList.remove('active'));
+  t.classList.add('active');
+  S.subj = t.dataset.subj; S.kp = 'all'; S.type = 'all';
+  $('filterType').value = 'all';
+  renderKP(); render();
+});
+kpList.addEventListener('click', e => {
+  const li = e.target.closest('.kp-item');
+  if (!li) return;
+  S.kp = li.dataset.kp;
+  $('filterKp').value = S.kp;
+  renderKP(); render();
+});
+$('filterKp').addEventListener('change', function() { S.kp = this.value; renderKP(); render(); });
+$('filterType').addEventListener('change', function() { S.type = this.value; render(); });
+$('searchInp').addEventListener('input', function() { S.search = this.value.trim(); render(); });
+$('btnRandom').addEventListener('click', () => {
+  const qs = getQs();
+  if (!qs.length) return;
+  const q = qs[Math.floor(Math.random()*qs.length)];
+  document.getElementById('qc-'+q.id)?.scrollIntoView({ behavior:'smooth', block:'center' });
+});
+$('btnRevealAll').addEventListener('click', () => {
+  document.querySelectorAll('.q-answer-content').forEach(el=>el.classList.add('show'));
+  document.querySelectorAll('.q-reveal-btn').forEach(b=>b.textContent='🙈 收起');
+});
+$('btnReset').addEventListener('click', () => {
+  if (!confirm('确定要重置所有进度吗？（收藏和XP会保留）')) return;
+  S.answers = {}; S.sessionCorrect = 0; S.sessionTotal = 0; save(); render();
+});
+
+// Mobile sidebar
+$('menuFab').addEventListener('click', () => { $('sidebar').classList.add('open'); $('sbOverlay').classList.add('show'); });
+$('sbOverlay').addEventListener('click', () => { $('sidebar').classList.remove('open'); $('sbOverlay').classList.remove('show'); });
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'r') { e.preventDefault(); $('btnRandom').click(); }
+  if (e.ctrlKey && e.key === 'a') { e.preventDefault(); $('btnRevealAll').click(); }
+});
+
+// Init
+renderKP(); render(); updateXPBar();
+</script>
+</body>
+</html>

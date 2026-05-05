@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/quiz/quiz"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#6366f1",
+    "navigationBarTitleText": "庐江中考特训营",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f0f4ff"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}
